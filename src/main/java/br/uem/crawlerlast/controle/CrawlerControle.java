@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.uem.crawlerlast.crawler.CrawlerAPI;
 import br.uem.crawlerlast.crawler.CrawlerWeb;
@@ -18,7 +22,9 @@ import br.uem.crawlerlast.modelo.Artista;
 import br.uem.crawlerlast.modelo.ArtistaSimilar;
 import br.uem.crawlerlast.modelo.Musica;
 
-@Controller
+@CrossOrigin
+@RestController
+@RequestMapping("api/crawler/")
 public class CrawlerControle {
 	
 	@Autowired
@@ -57,16 +63,17 @@ public class CrawlerControle {
 		}
 	}
 	
-	public void crawlerArtista(TipoBusca tipoBusca, String chaveBusca) {
+	@GetMapping("crawlerartista/{tipoBusca}/{chaveBusca}")
+	public void crawlerArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chaveBusca") String chaveBusca) {
 		String respostaJson = "";
 		Artista artista;
 		Album album;
 		Musica musica;
 		switch (tipoBusca) {
-		case BUSCA_NOME:
+		case "nome":
 			respostaJson = CrawlerAPI.requisicaoArtistaPorNome(chaveBusca);
 			break;
-		case BUSCA_MBID:
+		case "mbid":
 			respostaJson = CrawlerAPI.requisicaoArtistaPorMbid(chaveBusca);
 			break;
 		}
@@ -136,7 +143,7 @@ public class CrawlerControle {
 			Scanner in = new Scanner(new FileReader(urlArquivo));
 			while (in.hasNextLine()) {
 			    String line = in.nextLine();
-			    crawlerArtista(TipoBusca.BUSCA_NOME, line);
+			    crawlerArtista("nome", line);
 			}
 			in.close();
 			
@@ -151,7 +158,7 @@ public class CrawlerControle {
 		List<Artista> artistas = artistaControle.buscarTodosArtistas();	
 		for(Artista artista : artistas) {			
 			for(ArtistaSimilar similar : artista.getArtistasSimilares()) {
-				crawlerArtista(TipoBusca.BUSCA_MBID, similar.getMbidSimilar());
+				crawlerArtista("mbid", similar.getMbidSimilar());
 			}
 		}
 	}
