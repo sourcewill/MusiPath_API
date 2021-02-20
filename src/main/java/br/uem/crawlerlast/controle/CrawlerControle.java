@@ -8,11 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import br.uem.crawlerlast.crawler.CrawlerAPI;
 import br.uem.crawlerlast.crawler.CrawlerWeb;
@@ -22,9 +18,7 @@ import br.uem.crawlerlast.modelo.Artista;
 import br.uem.crawlerlast.modelo.ArtistaSimilar;
 import br.uem.crawlerlast.modelo.Musica;
 
-@CrossOrigin
-@RestController
-@RequestMapping("api/crawler/")
+@Controller
 public class CrawlerControle {
 	
 	@Autowired
@@ -63,17 +57,16 @@ public class CrawlerControle {
 		}
 	}
 	
-	@GetMapping("crawlerartista/{tipoBusca}/{chaveBusca}")
-	public void crawlerArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chaveBusca") String chaveBusca) {
+	public void crawlerArtista(TipoBusca tipoBusca, String chaveBusca) {
 		String respostaJson = "";
 		Artista artista;
 		Album album;
 		Musica musica;
 		switch (tipoBusca) {
-		case "nome":
+		case BUSCA_NOME:
 			respostaJson = CrawlerAPI.requisicaoArtistaPorNome(chaveBusca);
 			break;
-		case "mbid":
+		case BUSCA_MBID:
 			respostaJson = CrawlerAPI.requisicaoArtistaPorMbid(chaveBusca);
 			break;
 		}
@@ -97,7 +90,7 @@ public class CrawlerControle {
 		List<ArtistaSimilar> similares= CrawlerAPI.lerJsonArtistasSimilares(respostaJson);
 		artista = artistaControle.associarArtistasSimilares(artista, similares);
 		
-		List<String> listaDeAlbuns = CrawlerWeb.getNomesAlbuns(artista.getUrlLastFm(), 3);
+		List<String> listaDeAlbuns = CrawlerWeb.getNomesAlbuns(artista.getUrlLastFm(), 100);
 		if(listaDeAlbuns == null) {
 			System.out.println("Nenhum album econtrado.");
 			return;
@@ -143,7 +136,7 @@ public class CrawlerControle {
 			Scanner in = new Scanner(new FileReader(urlArquivo));
 			while (in.hasNextLine()) {
 			    String line = in.nextLine();
-			    crawlerArtista("nome", line);
+			    crawlerArtista(TipoBusca.BUSCA_NOME, line);
 			}
 			in.close();
 			
@@ -158,7 +151,7 @@ public class CrawlerControle {
 		List<Artista> artistas = artistaControle.buscarTodosArtistas();	
 		for(Artista artista : artistas) {			
 			for(ArtistaSimilar similar : artista.getArtistasSimilares()) {
-				crawlerArtista("mbid", similar.getMbidSimilar());
+				crawlerArtista(TipoBusca.BUSCA_MBID, similar.getMbidSimilar());
 			}
 		}
 	}
