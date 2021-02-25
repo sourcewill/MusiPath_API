@@ -40,11 +40,22 @@ public class GrafoControle {
 		return grafo;
 	}
 	
-	@GetMapping("grafoartista/{nome}/{nivelLimite}")
-	public Grafo formarGrafoArtista(@PathVariable(value = "nome") String nome, @PathVariable(value = "nivelLimite") String nivelLimite) {
+	@GetMapping("grafoartista/{tipoBusca}/{chave}/{nivelLimite}")
+	public Grafo formarGrafoArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chave") String chave, @PathVariable(value = "nivelLimite") String nivelLimite) {
 		
-		Artista artista = artistaService.buscaPorNome(nome);		
 		Grafo grafoArtista = new Grafo();
+		Artista artista = null;
+		
+		switch(tipoBusca) {
+			case "mbid":
+				artista = artistaService.buscaPorMbid(chave);
+				break;
+			case "nome":
+				artista = artistaService.buscaPorNome(chave);
+				break;
+			default:
+				return grafoArtista;
+		}
 		
 		if(artista == null) {
 			return grafoArtista;
