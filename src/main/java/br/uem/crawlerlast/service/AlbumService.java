@@ -1,5 +1,7 @@
 package br.uem.crawlerlast.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,14 @@ public class AlbumService {
 	
 	public Album buscaPorMbid(String mbid) {
 		return albumRepository.findByMbid(mbid);
+	}
+	
+	public List<Album> buscarTodosAlbuns() {
+		return albumRepository.findAll();
+	}
+	
+	public void deletarAlbumPorMbid(String mbid) {
+		albumRepository.deleteById(mbid);
 	}
 
 }

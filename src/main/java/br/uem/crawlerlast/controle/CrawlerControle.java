@@ -90,7 +90,7 @@ public class CrawlerControle {
 		List<ArtistaSimilar> similares= CrawlerAPI.lerJsonArtistasSimilares(respostaJson);
 		artista = artistaControle.associarArtistasSimilares(artista, similares);
 		
-		List<String> listaDeAlbuns = CrawlerWeb.getNomesAlbuns(artista.getUrlLastFm(), 100);
+		List<String> listaDeAlbuns = CrawlerWeb.getNomesAlbuns(artista.getUrlLastFm(), 50);
 		if(listaDeAlbuns == null) {
 			System.out.println("Nenhum album econtrado.");
 			return;

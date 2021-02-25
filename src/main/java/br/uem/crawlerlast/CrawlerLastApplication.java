@@ -35,8 +35,11 @@ public class CrawlerLastApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		//artistaControle.deletarArtistaPorMbid("afb680f2-b6eb-4cd7-a70b-a63b25c763d5");
-		//crawlerControle.crawlerArtista(TipoBusca.BUSCA_MBID, "afb680f2-b6eb-4cd7-a70b-a63b25c763d5");
+		//artistaControle.deletarArtistasSemAlbuns();
+		//albumControle.deletarAlbunsVazios();
+		
+		//artistaControle.deletarArtistaPorMbid("012151a8-0f9a-44c9-997f-ebd68b5389f9");
+		//crawlerControle.crawlerArtista(TipoBusca.BUSCA_MBID, "012151a8-0f9a-44c9-997f-ebd68b5389f9");
 		
 		//crawlerControle.crawlerArtistasSimilares();
 		//crawlerControle.crawlerArtistasPorArquivo("nomes_artistas_teste\\teste.txt");
