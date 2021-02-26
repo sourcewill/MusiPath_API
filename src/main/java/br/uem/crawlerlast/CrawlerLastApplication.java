@@ -10,6 +10,7 @@ import br.uem.crawlerlast.controle.ArtistaControle;
 import br.uem.crawlerlast.controle.CrawlerControle;
 import br.uem.crawlerlast.controle.MusicaControle;
 import br.uem.crawlerlast.enums.TipoBusca;
+import br.uem.crawlerlast.modelo.Album;
 
 @SpringBootApplication
 public class CrawlerLastApplication implements CommandLineRunner{
@@ -34,6 +35,8 @@ public class CrawlerLastApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		//albumControle.criarAlbunsSimilares();
 		
 		//artistaControle.deletarArtistasSemAlbuns();
 		//albumControle.deletarAlbunsVazios();

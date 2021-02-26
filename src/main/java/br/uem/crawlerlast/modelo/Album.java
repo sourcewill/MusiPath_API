@@ -1,5 +1,6 @@
 package br.uem.crawlerlast.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,6 +48,15 @@ public class Album {
 	@OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Musica> musicas;
+	
+	@OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<AlbumSimilar> albunsSimilares;
+	
+	public Album() {
+		this.tags = new ArrayList<>();
+		this.albunsSimilares = new ArrayList<>();
+	}
 
 	// Getters e Setters
 
@@ -105,5 +115,46 @@ public class Album {
 	public void setMusicas(List<Musica> musicas) {
 		this.musicas = musicas;
 	}
+
+	public List<AlbumSimilar> getAlbunsSimilares() {
+		return albunsSimilares;
+	}
+
+	public void setAlbunsSimilares(List<AlbumSimilar> albunsSimilares) {
+		this.albunsSimilares = albunsSimilares;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mbid == null) ? 0 : mbid.hashCode());
+		result = prime * result + ((urlImagem == null) ? 0 : urlImagem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Album other = (Album) obj;
+		if (mbid == null) {
+			if (other.mbid != null)
+				return false;
+		} else if (!mbid.equals(other.mbid))
+			return false;
+		if (urlImagem == null) {
+			if (other.urlImagem != null)
+				return false;
+		} else if (!urlImagem.equals(other.urlImagem))
+			return false;
+		return true;
+	}
+	
+	
 
 }
