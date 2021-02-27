@@ -3,15 +3,18 @@ package br.uem.crawlerlast.controle;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.uem.crawlerlast.modelo.Album;
 import br.uem.crawlerlast.modelo.Artista;
 import br.uem.crawlerlast.modelo.ArtistaSimilar;
+import br.uem.crawlerlast.service.AlbumService;
 import br.uem.crawlerlast.service.ArtistaService;
 
 @CrossOrigin
@@ -21,6 +24,9 @@ public class ArtistaControle {
 
 	@Autowired
 	private ArtistaService artistaService;
+	
+	@Autowired
+	private AlbumService albumService;
 
 	public Artista criar(Artista artista) {
 		return artistaService.criar(artista);
@@ -48,12 +54,29 @@ public class ArtistaControle {
 	
 	@GetMapping("buscarpormbid/{mbid}")
 	public Artista buscarPorMbid(@PathVariable(value = "mbid") String mbid) {
-		return artistaService.buscaPorMbid(mbid);
+		Artista artista = artistaService.buscaPorMbid(mbid);
+		if(artista == null) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		}
+		return artista;
 	}
 	
 	@GetMapping("buscarpornome/{nome}")
 	public Artista buscarPorNome(@PathVariable(value = "nome") String nome) {
-		return artistaService.buscaPorNome(nome);
+		Artista artista = artistaService.buscaPorNome(nome);
+		if(artista == null) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		}
+		return artista;
+	}
+	
+	@GetMapping("buscarporalbummbid/{mbid}")
+	public Artista getArtistaByAlbumMbid(@PathVariable(value = "mbid") String mbid) {
+		Album album = albumService.buscaPorMbid(mbid);
+		if(album == null) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		}
+		return artistaService.buscaPorMbid(album.getArtista().getMbid());
 	}
 	
 	public void deletarArtistaPorMbid(String mbid) {

@@ -5,7 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.uem.crawlerlast.modelo.Album;
 import br.uem.crawlerlast.modelo.AlbumSimilar;
@@ -13,7 +19,9 @@ import br.uem.crawlerlast.modelo.Musica;
 import br.uem.crawlerlast.service.AlbumService;
 import br.uem.crawlerlast.utils.SimilarityUtil;
 
-@Controller
+@CrossOrigin
+@RestController
+@RequestMapping("api/albuns/")
 public class AlbumControle {
 	
 	@Autowired
@@ -23,8 +31,13 @@ public class AlbumControle {
 		return albumService.criar(album);
 	}
 	
-	public Album buscarPorMbid(String mbid) {
-		return albumService.buscaPorMbid(mbid);
+	@GetMapping("buscarpormbid/{mbid}")
+	public Album buscarPorMbid(@PathVariable(value = "mbid") String mbid) {
+		Album album = albumService.buscaPorMbid(mbid);
+		if(album == null) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		}
+		return album;
 	}
 	
 	public List<Album> buscarTodosAlbuns() {
@@ -61,6 +74,17 @@ public class AlbumControle {
 			i++;
 		}
 		return tags;
+	}
+	
+	public void corrigirAlbunsSemTags() {
+		for(Album album : this.buscarTodosAlbuns()) {
+			if(album.getTags().isEmpty()) {
+				for(String tag: album.getArtista().getTags()) {
+					album.getTags().add(tag);
+				}
+			}
+			this.criar(album);
+		}
 	}
 	
 	
@@ -119,6 +143,7 @@ public class AlbumControle {
 	
 	
 	public void criarAlbunsSimilares() {
+		this.corrigirAlbunsSemTags();
 		for(Album album : this.buscarTodosAlbuns()) {
 			this.gerarListaDeSimilares(album, 10);
 		}
