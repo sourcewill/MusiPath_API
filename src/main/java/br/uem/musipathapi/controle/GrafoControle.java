@@ -24,8 +24,8 @@ public class GrafoControle {
 	@Autowired
 	private ArtistaService artistaService;
 	
-	@GetMapping("grafoartista/{tipoBusca}/{chave}/{nivelLimite}")
-	public Grafo formarGrafoArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chave") String chave, @PathVariable(value = "nivelLimite") String nivelLimite) {
+	@GetMapping("grafoartista/{tipoBusca}/{chave}/{profundidadeLimite}/{ramificacaoLimite}")
+	public Grafo formarGrafoArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chave") String chave, @PathVariable(value = "profundidadeLimite") String profundidadeLimite, @PathVariable(value = "ramificacaoLimite") String ramificacaoLimite) {
 		
 		Grafo grafoArtista = new Grafo();
 		Artista artista = null;
@@ -45,40 +45,46 @@ public class GrafoControle {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 		}
 		
-		formarGrafoPorRecursao(grafoArtista, artista, 0, Integer.parseInt(nivelLimite));
+		formarGrafoPorRecursao(grafoArtista, artista, 0, Integer.parseInt(profundidadeLimite), Integer.parseInt(ramificacaoLimite));
 		
 		return grafoArtista;
 		
 	}
 	
-	public Grafo formarGrafoPorRecursao(Grafo grafo, Artista artista, Integer nivelatual, Integer nivelLimite) {
+	public Grafo formarGrafoPorRecursao(Grafo grafo, Artista artista, Integer profundidadeAtual, Integer profundidadeLimite, Integer ramificacaoLimite) {
 		
-		if(nivelatual == nivelLimite) {
+		if(profundidadeAtual >= profundidadeLimite) {
 			No no = new No(artista.getMbid(), artista.getNome());
-			no.setNivel(nivelatual);
+			no.setNivel(profundidadeAtual);
 			no.setUrlImagem(artista.getUrlImagem());
 			grafo.addNo(no);
 			return grafo;
 		}
 		
-		nivelatual++;
-		
-		System.out.println("Nivel atual: " + nivelatual);
-		System.out.println("Nivel limite: " + nivelLimite);
+
+		System.out.println("Nivel atual: " + profundidadeAtual);
+		System.out.println("Nivel limite: " + profundidadeLimite);
 		System.out.println("Artista: " + artista.getNome() + "\n");
 		
 		No no = new No(artista.getMbid(), artista.getNome());
-		no.setNivel(nivelatual);
+		no.setNivel(profundidadeAtual);
 		no.setUrlImagem(artista.getUrlImagem());
 		grafo.addNo(no);
 		
+		profundidadeAtual++;
+		
+		Integer ramificacaoAtual = 0;
 		for(ArtistaSimilar similar : artista.getArtistasSimilares()) {
+			if(ramificacaoAtual >= ramificacaoLimite) {
+				break;
+			}
 			String mbidSimilar = similar.getMbidSimilar();
 			Artista artistaSImilar = artistaService.buscaPorMbid(mbidSimilar);
 			if(artistaSImilar != null) {
+				ramificacaoAtual++;
 				Aresta aresta = new Aresta(artista.getMbid(), mbidSimilar);
 				grafo.addAresta(aresta);
-				formarGrafoPorRecursao(grafo, artistaSImilar, nivelatual, nivelLimite);
+				formarGrafoPorRecursao(grafo, artistaSImilar, profundidadeAtual, profundidadeLimite, ramificacaoLimite);
 			}
 			
 		}
