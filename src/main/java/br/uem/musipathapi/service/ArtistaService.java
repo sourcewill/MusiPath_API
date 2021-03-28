@@ -19,7 +19,7 @@ public class ArtistaService {
 	}
 	
 	public Artista buscaPorNome(String nome) {
-		return artistaRepository.findByNome(nome);
+		return artistaRepository.findByNomeIgnoreCase(nome);
 	}
 	
 	public List<Artista> buscarTodosArtistas() {

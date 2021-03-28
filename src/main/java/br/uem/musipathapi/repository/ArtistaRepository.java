@@ -10,6 +10,6 @@ public interface ArtistaRepository extends JpaRepository<Artista, String> {
 	
 	Artista findByMbid(String mbid);
 	
-	Artista findByNome(String nome);	
+	Artista findByNomeIgnoreCase(String nome);
 
 }
