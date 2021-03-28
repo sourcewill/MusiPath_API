@@ -7,14 +7,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tbl_musicas")
@@ -36,11 +32,6 @@ public class Musica {
 
 	@Column(name = "url_youtube")
 	private String urlYoutube;
-
-	@ManyToOne
-	@JoinColumn(name = "album_mbid")
-	@JsonIgnore
-	private Album album;
 
 	// Getters e Setters
 
@@ -74,14 +65,6 @@ public class Musica {
 
 	public void setUrlYoutube(String urlYoutube) {
 		this.urlYoutube = urlYoutube;
-	}
-
-	public Album getAlbum() {
-		return album;
-	}
-
-	public void setAlbum(Album album) {
-		this.album = album;
 	}
 
 	public List<String> getTags() {
