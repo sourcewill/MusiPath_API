@@ -25,7 +25,7 @@ public class GrafoControle {
 	private ArtistaService artistaService;
 	
 	@GetMapping("grafoartista/{tipoBusca}/{chave}/{profundidadeLimite}/{ramificacaoLimite}")
-	public Grafo formarGrafoArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chave") String chave, @PathVariable(value = "profundidadeLimite") String profundidadeLimite, @PathVariable(value = "ramificacaoLimite") String ramificacaoLimite) {
+	public Grafo formarGrafoArtista(@PathVariable(value = "tipoBusca") String tipoBusca, @PathVariable(value = "chave") String chave) {
 		
 		Grafo grafoArtista = new Grafo();
 		Artista artista = null;
@@ -45,9 +45,7 @@ public class GrafoControle {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 		}
 		
-		formarGrafoPorRecursao(grafoArtista, artista, 0, Integer.parseInt(profundidadeLimite), Integer.parseInt(ramificacaoLimite));
-		
-		return grafoArtista;
+		return artista.getGrafo();
 		
 	}
 	

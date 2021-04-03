@@ -1,11 +1,44 @@
 package br.uem.musipathapi.modelo;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name = "tbl_nos")
 public class No{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id_no;
+	
+	@Column(name="id_artista")
 	private String id;
+	
+	@Column(name="nome")
 	private String nome;
+	
+	@Column(name="url_imagem")
 	private String urlImagem;
+	
+	@Column(name="nivel")
 	private Integer nivel;
+	
+	@ManyToOne
+	@JoinColumn(name = "grafo_id")
+	@JsonIgnore
+	private Grafo grafo;
+	
+	public No() {
+		
+	}
 	
 	public No(String id, String nome) {
 		super();
@@ -45,6 +78,22 @@ public class No{
 
 	public void setUrlImagem(String urlImagem) {
 		this.urlImagem = urlImagem;
+	}
+
+	public Long getId_no() {
+		return id_no;
+	}
+
+	public void setId_no(Long id_no) {
+		this.id_no = id_no;
+	}
+
+	public Grafo getGrafo() {
+		return grafo;
+	}
+
+	public void setGrafo(Grafo grafo) {
+		this.grafo = grafo;
 	}
 
 	@Override

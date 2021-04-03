@@ -9,7 +9,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -52,6 +54,10 @@ public class Artista {
 	@OneToMany(mappedBy = "artista", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<ArtistaSimilar> artistasSimilares;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "grafo_id", referencedColumnName = "id")
+	private Grafo grafo;
 	
 	public Artista() {
 		this.tags = new ArrayList<>();
@@ -131,6 +137,14 @@ public class Artista {
 
 	public void setArtistasSimilares(List<ArtistaSimilar> artistasSimilares) {
 		this.artistasSimilares = artistasSimilares;
+	}
+
+	public Grafo getGrafo() {
+		return grafo;
+	}
+
+	public void setGrafo(Grafo grafo) {
+		this.grafo = grafo;
 	}
 
 	@Override

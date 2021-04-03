@@ -1,9 +1,38 @@
 package br.uem.musipathapi.modelo;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name = "tbl_arestas")
 public class Aresta {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name="de")
 	private String de;
+	
+	@Column(name="para")
 	private String para;
+	
+	@ManyToOne
+	@JoinColumn(name = "grafo_id")
+	@JsonIgnore
+	private Grafo grafo;
+	
+	public Aresta() {
+		
+	}
 	
 	public Aresta(String de, String para) {
 		super();
@@ -25,6 +54,22 @@ public class Aresta {
 
 	public void setPara(String para) {
 		this.para = para;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Grafo getGrafo() {
+		return grafo;
+	}
+
+	public void setGrafo(Grafo grafo) {
+		this.grafo = grafo;
 	}
 
 	@Override
