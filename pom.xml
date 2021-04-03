@@ -11,6 +11,7 @@
 	<groupId>br.uem</groupId>
 	<artifactId>musipathapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>MusipathAPI</name>
 	<description>Spring Boot Musipath API</description>
 

@@ -15,7 +15,7 @@ public class CrawlerLastApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		
+		System.out.println("Musipath API iniciada!");
 	}
 
 }

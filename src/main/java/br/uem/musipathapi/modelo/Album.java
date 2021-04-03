@@ -46,7 +46,7 @@ public class Album {
 	@JsonIgnore
 	private Artista artista;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Musica> musicas;
 	
