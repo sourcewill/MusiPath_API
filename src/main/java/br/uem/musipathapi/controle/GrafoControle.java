@@ -9,11 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.uem.musipathapi.modelo.Aresta;
 import br.uem.musipathapi.modelo.Artista;
-import br.uem.musipathapi.modelo.ArtistaSimilar;
 import br.uem.musipathapi.modelo.Grafo;
-import br.uem.musipathapi.modelo.No;
 import br.uem.musipathapi.service.ArtistaService;
 
 @CrossOrigin
@@ -47,46 +44,5 @@ public class GrafoControle {
 		
 		return artista.getGrafo();
 		
-	}
-	
-	public Grafo formarGrafoPorRecursao(Grafo grafo, Artista artista, Integer profundidadeAtual, Integer profundidadeLimite, Integer ramificacaoLimite) {
-		
-		if(profundidadeAtual >= profundidadeLimite) {
-			No no = new No(artista.getMbid(), artista.getNome());
-			no.setNivel(profundidadeAtual);
-			no.setUrlImagem(artista.getUrlImagem());
-			grafo.addNo(no);
-			return grafo;
-		}
-		
-
-		System.out.println("Nivel atual: " + profundidadeAtual);
-		System.out.println("Nivel limite: " + profundidadeLimite);
-		System.out.println("Artista: " + artista.getNome() + "\n");
-		
-		No no = new No(artista.getMbid(), artista.getNome());
-		no.setNivel(profundidadeAtual);
-		no.setUrlImagem(artista.getUrlImagem());
-		grafo.addNo(no);
-		
-		profundidadeAtual++;
-		
-		Integer ramificacaoAtual = 0;
-		for(ArtistaSimilar similar : artista.getArtistasSimilares()) {
-			if(ramificacaoAtual >= ramificacaoLimite) {
-				break;
-			}
-			String mbidSimilar = similar.getMbidSimilar();
-			Artista artistaSImilar = artistaService.buscaPorMbid(mbidSimilar);
-			if(artistaSImilar != null) {
-				ramificacaoAtual++;
-				Aresta aresta = new Aresta(artista.getMbid(), mbidSimilar);
-				grafo.addAresta(aresta);
-				formarGrafoPorRecursao(grafo, artistaSImilar, profundidadeAtual, profundidadeLimite, ramificacaoLimite);
-			}
-			
-		}
-		
-		return grafo;
 	}
 }
